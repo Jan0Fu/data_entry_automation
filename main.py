@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
 from bs4 import BeautifulSoup
+from time import sleep
 
+driver_path = "/Users/jano/chromedriver"
 url = "https://www.zillow.com/san-francisco-ca/rentals/?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22usersSearchTerm%22%3A%22San%20Francisco%2C%20CA%22%2C%22mapBounds%22%3A%7B%22west%22%3A-122.6255902421875%2C%22east%22%3A-122.2410687578125%2C%22south%22%3A37.59597164329447%2C%22north%22%3A37.95417837493316%7D%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A20330%2C%22regionType%22%3A6%7D%5D%2C%22isMapVisible%22%3Atrue%2C%22filterState%22%3A%7B%22fsba%22%3A%7B%22value%22%3Afalse%7D%2C%22fsbo%22%3A%7B%22value%22%3Afalse%7D%2C%22nc%22%3A%7B%22value%22%3Afalse%7D%2C%22fore%22%3A%7B%22value%22%3Afalse%7D%2C%22cmsn%22%3A%7B%22value%22%3Afalse%7D%2C%22auc%22%3A%7B%22value%22%3Afalse%7D%2C%22fr%22%3A%7B%22value%22%3Atrue%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%2C%22mp%22%3A%7B%22max%22%3A3000%7D%2C%22price%22%3A%7B%22max%22%3A620006%7D%2C%22beds%22%3A%7B%22min%22%3A1%7D%7D%2C%22isListVisible%22%3Atrue%2C%22mapZoom%22%3A11%7D"
 form_link = "https://docs.google.com/forms/d/e/1FAIpQLScPzB6artkh_Q22BofbJD9-lToL1fU3lMdjJIke2WTSiwZ-OQ/viewform?usp=sf_link"
 headers = {
@@ -37,7 +39,9 @@ for element in all_price_elements:
     finally:
         all_prices.append(price)
 
-driver = webdriver.Chrome(form_link)
+driver = webdriver.Chrome(executable_path=driver_path)
+driver.get(form_link)
+sleep(2)
 address_field = driver.find_element(By.CLASS_NAME, '//*[@id="mG61Hd"]/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input')
 link_field = driver.find_element(By.CLASS_NAME, '//*[@id="mG61Hd"]/div[2]/div/div[2]/div[3]/div/div/div[2]/div/div[1]/div/div[1]/input')
 prices_field = driver.find_element(By.XPATH, '//*[@id="mG61Hd"]/div[2]/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div/div[1]/input')
@@ -48,5 +52,7 @@ for n in range(len(all_addresses)):
     link_field.send_keys(all_links[n])
     prices_field.send_keys(all_prices[n])
     submit.click()
+    sleep(1)
 
-
+sleep(2)
+driver.quit()
